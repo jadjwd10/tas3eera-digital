@@ -8,258 +8,128 @@
     body {
       font-family: Tahoma;
       direction: rtl;
-      background-color: #f9f9f9;
+      background-color: #f4f4f4;
       padding: 30px;
     }
-
     h2 {
       text-align: center;
-      margin-bottom: 30px;
     }
-
     form {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background-color: #fff;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
     label {
       display: block;
-      margin: 15px 0 5px;
+      margin-top: 20px;
+      font-weight: bold;
     }
-
-    input, select {
+    select, input {
       width: 100%;
       padding: 10px;
+      margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 5px;
+      font-size: 16px;
     }
-
     button {
-      margin-top: 20px;
+      margin-top: 25px;
       width: 100%;
       background-color: #1e88e5;
       color: white;
       border: none;
       padding: 12px;
-      font-size: 16px;
+      font-size: 18px;
       border-radius: 6px;
       cursor: pointer;
-    }
-
-    .result {
-      margin-top: 20px;
-      text-align: center;
-      font-weight: bold;
-      color: green;
     }
   </style>
 </head>
 <body>
   <h2>📚 تسعيرة الكتب والمجلات</h2>
-
-  <form onsubmit="calculatePrice(event)">
-    <label>المقاس:</label>
-    <select required>
-      <option value="A4">A4</option>
-      <option value="A3">A3</option>
-      <option value="A5">A5</option>
-      <option value="A6">A6</option>
-      <option value="A7">A7</option>
+  <form>
+    <label for="size">المقاس:</label>
+    <select id="size">
+      <option>A4</option>
+      <option>A5</option>
+      <option>B5</option>
+      <option>A6</option>
+      <option>مقاس مخصص</option>
     </select>
 
-    <label>نوع الورق الداخلي:</label>
-    <select id="innerPaper" required>
-      <option disabled selected>جاري التحميل...</option>
+    <label for="coverPaper">نوع الورق الخارجي (الغلاف):</label>
+    <select id="coverPaper">
+      <option>جارٍ التحميل...</option>
     </select>
 
-    <label style="background-color: #b71c1c; color: white; padding: 5px 10px; border-radius: 4px;">نوع الورق الخارجي (الغلاف):</label>
-    <select required>
-      <option>كوشيه 250</option>
-      <option>كرتون</option>
-      <option>لامع</option>
+    <label for="innerPaper">نوع الورق الداخلي:</label>
+    <select id="innerPaper">
+      <option>جارٍ التحميل...</option>
     </select>
 
-    <label>سلوفان على الغلاف:</label>
-    <select required>
-      <option>بدون</option>
+    <label for="coverLam">سلوفان على الغلاف:</label>
+    <select id="coverLam">
       <option>لامع</option>
       <option>مطفي</option>
+      <option>بدون</option>
     </select>
 
-    <label>سلوفان على الصفحات الداخلية:</label>
-    <select required>
-      <option>بدون</option>
+    <label for="innerLam">سلوفان على الصفحات الداخلية:</label>
+    <select id="innerLam">
       <option>لامع</option>
       <option>مطفي</option>
+      <option>بدون</option>
     </select>
 
-    <label>عدد الصفحات الداخلية:</label>
-    <input type="number" min="1" required>
+    <label for="innerPages">عدد الصفحات الداخلية:</label>
+    <select id="innerPages"></select>
 
-    <label>عدد صفحات الغلاف:</label>
-    <input type="number" min="1" required>
+    <label for="coverPages">عدد صفحات الغلاف:</label>
+    <select id="coverPages">
+      <option>2</option>
+      <option>4</option>
+    </select>
 
-    <label>الكمية:</label>
-    <input type="number" min="1" required>
+    <label for="quantity">الكمية:</label>
+    <input type="number" id="quantity" min="1">
 
     <button type="submit">احسب التسعيرة</button>
-    <div class="result" id="result"></div>
   </form>
 
   <script>
-    function calculatePrice(event) {
-      event.preventDefault();
-      document.getElementById('result').textContent = "🔄 تم استلام البيانات. سيتم التقدير لاحقًا.";
-    }
-
-    // جلب نوع الورق الداخلي من العمود الثالث
-    <!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسعيرة الكتب والمجلات</title>
-  <style>
-    body {
-      font-family: Tahoma;
-      direction: rtl;
-      background-color: #f9f9f9;
-      padding: 30px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    form {
-      max-width: 500px;
-      margin: auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    label {
-      display: block;
-      margin: 15px 0 5px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button {
-      margin-top: 20px;
-      width: 100%;
-      background-color: #1e88e5;
-      color: white;
-      border: none;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .result {
-      margin-top: 20px;
-      text-align: center;
-      font-weight: bold;
-      color: green;
-    }
-  </style>
-</head>
-<body>
-  <h2>📚 تسعيرة الكتب والمجلات</h2>
-
-  <form onsubmit="calculatePrice(event)">
-    <label>المقاس:</label>
-    <select required>
-      <option value="A4">A4</option>
-      <option value="A3">A3</option>
-      <option value="A5">A5</option>
-      <option value="A6">A6</option>
-      <option value="A7">A7</option>
-    </select>
-
-    <label>نوع الورق الداخلي:</label>
-    <select id="innerPaper" required>
-      <option disabled selected>جاري التحميل...</option>
-    </select>
-
-    <label style="background-color: #b71c1c; color: white; padding: 5px 10px; border-radius: 4px;">نوع الورق الخارجي (الغلاف):</label>
-    <select required>
-      <option>كوشيه 250</option>
-      <option>كرتون</option>
-      <option>لامع</option>
-    </select>
-
-    <label>سلوفان على الغلاف:</label>
-    <select required>
-      <option>بدون</option>
-      <option>لامع</option>
-      <option>مطفي</option>
-    </select>
-
-    <label>سلوفان على الصفحات الداخلية:</label>
-    <select required>
-      <option>بدون</option>
-      <option>لامع</option>
-      <option>مطفي</option>
-    </select>
-
-    <label>عدد الصفحات الداخلية:</label>
-    <input type="number" min="1" required>
-
-    <label>عدد صفحات الغلاف:</label>
-    <input type="number" min="1" required>
-
-    <label>الكمية:</label>
-    <input type="number" min="1" required>
-
-    <button type="submit">احسب التسعيرة</button>
-    <div class="result" id="result"></div>
-  </form>
-
-  <script>
-    function calculatePrice(event) {
-      event.preventDefault();
-      document.getElementById('result').textContent = "🔄 تم استلام البيانات. سيتم التقدير لاحقًا.";
-    }
-
-    // جلب نوع الورق الداخلي من العمود الثالث
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSKBiSRcRc9CWMiORKXKCtWDUKdIaBevg5DcXENNHOLb8prgnOGTGOXMR1h4pr4X8ZOhLliFMIBeHcY/pub?output=csv")
-      .then(response => response.text())
-      .then(csvText => {
-        const rows = csvText.split('\\n').slice(1); // حذف رأس الجدول
-        const select = document.getElementById("innerPaper");
-        select.innerHTML = "";
-        rows.forEach(row => {
-          const cols = row.split(",");
-          const value = (cols[2] || '').trim(); // العمود الثالث
-          if (value) {
+    function loadPaperOptions(apiURL, selectId) {
+      fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
+          const select = document.getElementById(selectId);
+          select.innerHTML = "";
+          data.forEach(item => {
             const option = document.createElement("option");
-            option.textContent = value;
+            option.textContent = item.value;
             select.appendChild(option);
-          }
+          });
+        })
+        .catch(() => {
+          const select = document.getElementById(selectId);
+          select.innerHTML = "<option>فشل التحميل</option>";
         });
-      })
-      .catch(() => {
-        const select = document.getElementById("innerPaper");
-        select.innerHTML = "<option>فشل التحميل</option>";
-      });
-  </script>
-</body>
-</html>
+    }
 
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwHAy1i7DngwN9RLlxow9jW9A0C46kIGQwQ18uhLA6yefJSrsvCLVppbzwAFSgJ9lATGA/exec";
+    loadPaperOptions(scriptUrl, "coverPaper");
+    loadPaperOptions(scriptUrl, "innerPaper");
+
+    // توليد عدد الصفحات من 4 إلى 500 بمضاعفات 4
+    const innerPagesSelect = document.getElementById("innerPages");
+    for (let i = 4; i <= 500; i += 4) {
+      const option = document.createElement("option");
+      option.textContent = i;
+      option.value = i;
+      innerPagesSelect.appendChild(option);
+    }
   </script>
 </body>
 </html>
