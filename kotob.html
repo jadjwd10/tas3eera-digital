@@ -78,17 +78,26 @@
     button:hover {
       background: linear-gradient(to right, #1565c0, #42a5f5);
     }
+
+    .result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: green;
+    }
   </style>
 </head>
 <body>
   <h2>📚 تسعيرة الكتب والمجلات</h2>
-  <form>
+  <form id="pricingForm">
     <label for="size">المقاس:</label>
     <select id="size">
       <option>A4</option>
       <option>A5</option>
       <option>B5</option>
       <option>A6</option>
+      <option>مقاس مخصص</option>
     </select>
 
     <label for="coverPaper">نوع الورق الخارجي (الغلاف):</label>
@@ -128,39 +137,61 @@
     <input type="number" id="quantity" min="1">
 
     <button type="submit">احسب التسعيرة</button>
+    <div class="result" id="result"></div>
   </form>
 
   <script>
-    function loadPaperOptions(apiURL, selectId) {
-      fetch(apiURL)
-        .then(response => response.json())
-        .then(data => {
-          const select = document.getElementById(selectId);
-          select.innerHTML = "";
-          data.forEach(item => {
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzN_oVxULWKjN2I7WFBnw1rSyHyiX13GE5W2IEFh6zYqoRB8nmf-p6Npq0iYC7FsxPLPA/exec";
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        const coverSelect = document.getElementById("coverPaper");
+        const innerSelect = document.getElementById("innerPaper");
+        coverSelect.innerHTML = "";
+        innerSelect.innerHTML = "";
+        const rows = data["haam"];
+
+        for (let i = 1; i < rows.length; i++) {
+          if (rows[i][0] && rows[i][1] == 1) {
             const option = document.createElement("option");
-            option.textContent = item.value;
-            select.appendChild(option);
-          });
-        })
-        .catch(() => {
-          const select = document.getElementById(selectId);
-          select.innerHTML = "<option>فشل التحميل</option>";
-        });
-    }
+            option.textContent = rows[i][0];
+            coverSelect.appendChild(option);
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwHAy1i7DngwN9RLlxow9jW9A0C46kIGQwQ18uhLA6yefJSrsvCLVppbzwAFSgJ9lATGA/exec";
-    loadPaperOptions(scriptUrl, "coverPaper");
-    loadPaperOptions(scriptUrl, "innerPaper");
+            const option2 = document.createElement("option");
+            option2.textContent = rows[i][0];
+            innerSelect.appendChild(option2);
+          }
+        }
+      });
 
-    // توليد عدد الصفحات من 4 إلى 500 بمضاعفات 4
-    const innerPagesSelect = document.getElementById("innerPages");
+    const innerPages = document.getElementById("innerPages");
     for (let i = 4; i <= 500; i += 4) {
       const option = document.createElement("option");
-      option.textContent = i;
-      option.value = i;
-      innerPagesSelect.appendChild(option);
+      option.value = option.textContent = i;
+      innerPages.appendChild(option);
     }
+
+    document.getElementById("pricingForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const size = document.getElementById("size").value;
+      const coverPaper = document.getElementById("coverPaper").value;
+
+      fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ size, coverPaper })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").textContent = `💰 السعر: ${data.price} ريال`;
+      })
+      .catch(err => {
+        document.getElementById("result").textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
+        console.error(err);
+      });
+    });
   </script>
 </body>
 </html>
