@@ -238,28 +238,28 @@ const result = document.getElementById("result");
       });
   });
 </script>
-  <script>
-  // تأخير التنفيذ عشان يتأكد إن السكربت الأول خلص
-  setTimeout(() => {
-    const resultDiv = document.getElementById("result");
+ <script>
+  // السكربت الثاني لحساب تكلفة سلوفان الصفحات الداخلية
+  document.getElementById("pricingForm").addEventListener("submit", function () {
+    setTimeout(() => {
+      const resultDiv = document.getElementById("result");
+      const resultText = resultDiv.textContent;
 
-    // استخراج القيم السابقة من النص
-    const resultText = resultDiv.textContent;
+      // استخراج عدد الصفحات الداخلية
+      const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
+      // استخراج قيمة السلوفان الداخلي
+      const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
 
-    // استخراج القيم باستخدام Regular Expression
-    const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
-    const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
+      if (innerPagesMatch && lamInnerMatch) {
+        const pages = parseInt(innerPagesMatch[1]);
+        const lamValue = parseFloat(lamInnerMatch[1]);
 
-    if (innerPagesMatch && lamInnerMatch) {
-      const pages = parseInt(innerPagesMatch[1]);
-      const lamValue = parseFloat(lamInnerMatch[1]);
+        const total = (pages * lamValue).toFixed(3);
 
-      const totalInnerLaminationCost = (pages * lamValue).toFixed(3);
-
-      // نضيف السطر الجديد للعرض
-      resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية (× الصفحات):</span> ${totalInnerLaminationCost}`;
-    }
-  }, 500); // نصف ثانية كافية لانتظار السكربت الأول
+        resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
+      }
+    }, 200); // ننتظر 200ms فقط بعد الضغط على الزر
+  });
 </script>
 
 </body>
