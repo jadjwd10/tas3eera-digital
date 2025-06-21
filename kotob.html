@@ -248,7 +248,7 @@ const result = document.getElementById("result");
 
     // استخراج القيم باستخدام Regular Expression
     const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
-    const lamInnerMatch = resultText.match(/سلوفان الداخلي \(مقسوم حسب المقاس\):\s*([\d.]+)/);
+    const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
 
     if (innerPagesMatch && lamInnerMatch) {
       const pages = parseInt(innerPagesMatch[1]);
