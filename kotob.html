@@ -173,26 +173,26 @@
       innerPages.appendChild(option);
     }
 
-    document.getElementById("pricingForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+document.getElementById("pricingForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-      const size = document.getElementById("size").value;
-      const coverPaper = document.getElementById("coverPaper").value;
+  const size = document.getElementById("size").value;
+  const coverPaper = document.getElementById("coverPaper").value;
 
-      fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ size, coverPaper })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("result").textContent = `💰 السعر: ${data.price} ريال`;
-      })
-      .catch(err => {
-        document.getElementById("result").textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
-        console.error(err);
-      });
-    });
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ size, coverPaper })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").textContent = `💰 السعر: ${data.price} ريال`;
+  })
+  .catch(err => {
+    document.getElementById("result").textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
+    console.error(err);
+  });
+});
   </script>
 </body>
 </html>
