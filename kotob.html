@@ -250,7 +250,39 @@ document.getElementById("resultExtra").innerHTML = `
   });
 </script>
 
-  
+  <script>
+document.getElementById("pricingForm").addEventListener("submit", function () {
+  setTimeout(() => {
+    const resultMain = document.getElementById("result").textContent;
+    if (!resultMain.includes("✅ تم جلب القيم بنجاح")) return;
+
+    const size = document.getElementById("size").value;
+    const innerPaper = document.getElementById("innerPaper").value;
+    const innerPagesCount = parseInt(document.getElementById("innerPages").value);
+    const resultExtra = document.getElementById("resultExtra");
+
+    fetch("https://script.google.com/macros/s/AKfycbzN_oVxULWKjN2I7WFBnw1rSyHyiX13GE5W2IEFh6zYqoRB8nmf-p6Npq0iYC7FsxPLPA/exec")
+      .then(res => res.json())
+      .then(data => {
+        const rows = data["haam"] || [];
+        const paperRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
+
+        if (paperRow) {
+          const السعر = parseFloat(paperRow["السعر"]) || 0;
+          const عددالرزم = parseFloat(paperRow["عدد الورق لكل رزمة"]) || 1;
+          const قيمةالداخلي = parseFloat(paperRow[size]) || 1;
+
+          const السعر_للورقة = السعر / عددالرزم / قيمةالداخلي;
+          const نصف_عدد_الصفحات = innerPagesCount / 2;
+          const التكلفة_النهائية = (السعر_للورقة * نصف_عدد_الصفحات).toFixed(3);
+
+          resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة عدد الصفحات الداخلية:</span> ${التكلفة_النهائية}`;
+        }
+      });
+  }, 500); // ننتظر نصف ثانية فقط للتأكد من ظهور النتائج
+});
+</script>
+
 
 </body>
 </html>
