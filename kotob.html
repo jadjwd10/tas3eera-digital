@@ -238,27 +238,29 @@ const result = document.getElementById("result");
       });
   });
 </script>
- <script>
-  // السكربت الثاني لحساب تكلفة سلوفان الصفحات الداخلية
+
+  
+<script>
   document.getElementById("pricingForm").addEventListener("submit", function () {
     setTimeout(() => {
       const resultDiv = document.getElementById("result");
-      const resultText = resultDiv.textContent;
+      const resultText = resultDiv.innerHTML; // استخدم innerHTML بدال textContent
 
-      // استخراج عدد الصفحات الداخلية
+      // استخراج القيم
       const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
-      // استخراج قيمة السلوفان الداخلي
       const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
 
       if (innerPagesMatch && lamInnerMatch) {
         const pages = parseInt(innerPagesMatch[1]);
         const lamValue = parseFloat(lamInnerMatch[1]);
-
         const total = (pages * lamValue).toFixed(3);
 
-        resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
+        // تحقق إذا السطر مضاف من قبل
+        if (!resultText.includes("تكلفة سلوفان الصفحات الداخلية:")) {
+          resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
+        }
       }
-    }, 200); // ننتظر 200ms فقط بعد الضغط على الزر
+    }, 250); // نزيد الوقت قليلًا احتياط
   });
 </script>
 
