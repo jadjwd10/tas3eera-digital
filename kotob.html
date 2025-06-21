@@ -200,30 +200,21 @@
         const coverValue = parseFloat(foundCoverRow?.[size]) || 0;
         const innerValue = parseFloat(foundInnerRow?.[size]) || 0;
 
-        // جلب سلوفان للغلاف
-        let laminationCoverValue = 0;
-      if (coverLam === "لامع" || coverLam === "مطفي") {
-          const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
-          if (lamRow) {
-            laminationCoverValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
-          }
-        }
+        // جلب سلوفان للغلاف// جلب سلوفان للغلاف
+let laminationCoverValue = 0;
+if (coverLam === "لامع" || coverLam === "مطفي") {
+  const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+  if (lamRow) {
+    laminationCoverValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
+  }
+}
 
-        // جلب سلوفان للصفحات الداخلية
-        let laminationInnerValue = 0;
-        if (innerLam !== "بدون") {
-          const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
-          if (lamRow) {
-            const baseValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
-            laminationInnerValue = baseValue * innerPagesCount;
-          }
-        }
+let laminationInnerValue = 0;
 
-        result.textContent = `✅ تم جلب القيم بنجاح:
+result.textContent = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
-🔹 سلوفان الغلاف (مقسوم حسب المقاس): ${laminationCoverValue.toFixed(3)}
-🔹 سلوفان الداخلي (بعد الضرب × الصفحات): ${laminationInnerValue.toFixed(3)}`;
+🔹 سلوفان الغلاف (مقسوم حسب المقاس): ${laminationCoverValue.toFixed(3)}`;
       })
       .catch(err => {
         result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
