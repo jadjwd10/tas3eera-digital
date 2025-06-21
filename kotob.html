@@ -179,6 +179,7 @@
     const size = document.getElementById("size").value;
     const coverPaper = document.getElementById("coverPaper").value;
     const innerPaper = document.getElementById("innerPaper").value;
+    const coverPagesCount = parseInt(document.getElementById("coverPages").value);
     const coverLam = document.getElementById("coverLam").value;
     const innerLam = document.getElementById("innerLam").value;
     const quantity = parseInt(document.getElementById("quantity").value);
@@ -220,8 +221,12 @@
           result.textContent = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
+🔹 عدد الصفحات الداخلية: ${innerPagesCount}
+🔹 عدد صفحات الغلاف: ${coverPagesCount}
+🔹 الكمية: ${quantity}
 🔹 سلوفان الغلاف (مقسوم حسب المقاس): ${finalLaminationCover.toFixed(3)}
 🔹 سلوفان الداخلي (مقسوم حسب المقاس): ${finalLaminationInner.toFixed(3)}`;
+
         } else {
           result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
         }
