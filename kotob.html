@@ -238,6 +238,29 @@ const result = document.getElementById("result");
       });
   });
 </script>
+  <script>
+  // تأخير التنفيذ عشان يتأكد إن السكربت الأول خلص
+  setTimeout(() => {
+    const resultDiv = document.getElementById("result");
+
+    // استخراج القيم السابقة من النص
+    const resultText = resultDiv.textContent;
+
+    // استخراج القيم باستخدام Regular Expression
+    const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
+    const lamInnerMatch = resultText.match(/سلوفان الداخلي \(مقسوم حسب المقاس\):\s*([\d.]+)/);
+
+    if (innerPagesMatch && lamInnerMatch) {
+      const pages = parseInt(innerPagesMatch[1]);
+      const lamValue = parseFloat(lamInnerMatch[1]);
+
+      const totalInnerLaminationCost = (pages * lamValue).toFixed(3);
+
+      // نضيف السطر الجديد للعرض
+      resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية (× الصفحات):</span> ${totalInnerLaminationCost}`;
+    }
+  }, 500); // نصف ثانية كافية لانتظار السكربت الأول
+</script>
 
 </body>
 </html>
