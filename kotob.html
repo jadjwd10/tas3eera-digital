@@ -202,7 +202,7 @@
 
         // جلب سلوفان للغلاف
         let laminationCoverValue = 0;
-        if (coverLam !== "بدون") {
+      if (coverLam === "لامع" || coverLam === "مطفي") {
           const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
           if (lamRow) {
             laminationCoverValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
