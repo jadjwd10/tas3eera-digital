@@ -254,7 +254,7 @@ document.getElementById("resultExtra").innerHTML = `
 document.getElementById("pricingForm").addEventListener("submit", function () {
   setTimeout(() => {
     const resultMain = document.getElementById("result").textContent;
-    if (!resultMain.includes("✅ تم جلب القيم بنجاح")) return;
+    if (!resultMain.includes("✅ تم جلب القيم بنجاح:")) return;
 
     const size = document.getElementById("size").value;
     const innerPaper = document.getElementById("innerPaper").value;
