@@ -176,15 +176,16 @@
   document.getElementById("pricingForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const size = document.getElementById("size").value;
-    const coverPaper = document.getElementById("coverPaper").value;
-    const innerPaper = document.getElementById("innerPaper").value;
-    const coverPagesCount = parseInt(document.getElementById("coverPages").value);
-    const coverLam = document.getElementById("coverLam").value;
-    const innerLam = document.getElementById("innerLam").value;
-    const quantity = parseInt(document.getElementById("quantity").value);
-    const result = document.getElementById("result");
-
+const size = document.getElementById("size").value;
+const coverPaper = document.getElementById("coverPaper").value;
+const innerPaper = document.getElementById("innerPaper").value;
+const coverPagesCount = parseInt(document.getElementById("coverPages").value);
+const coverLam = document.getElementById("coverLam").value;
+const innerLam = document.getElementById("innerLam").value;
+const quantity = parseInt(document.getElementById("quantity").value);
+const innerPagesCount = parseInt(document.getElementById("innerPages").value);
+const result = document.getElementById("result");
+    
     fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
