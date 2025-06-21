@@ -211,7 +211,7 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
   } else {
     result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
   }
-});
+})
     .catch(err => {
       result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
       console.error(err);
