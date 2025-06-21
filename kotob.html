@@ -179,17 +179,20 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
   const size = document.getElementById("size").value;
   const coverPaper = document.getElementById("coverPaper").value;
 
-  fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ size, coverPaper })
-  })
+ fetch(apiUrl)
   .then(res => res.json())
   .then(data => {
-    document.getElementById("result").textContent = `💰 السعر: ${data.price} ريال`;
+    const rows = data["haam"] || [];
+    const foundRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
+
+    if (foundRow && foundRow[size] !== undefined && foundRow[size] !== "" && !isNaN(foundRow[size])) {
+      result.textContent = `نوع الورق الخارجي (الغلاف): ${foundRow[size]} ريال`;
+    } else {
+      result.textContent = "❌ لم يتم العثور على السعر المناسب لهذا المقاس أو نوع الورق.";
+    }
   })
   .catch(err => {
-    document.getElementById("result").textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
+    result.textContent = "❌ حدث خطأ أثناء الاتصال بقاعدة البيانات.";
     console.error(err);
   });
 });
