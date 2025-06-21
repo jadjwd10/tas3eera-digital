@@ -138,104 +138,98 @@
     <div class="result" id="result"></div>
   </form>
 
-  <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzN_oVxULWKjN2I7WFBnw1rSyHyiX13GE5W2IEFh6zYqoRB8nmf-p6Npq0iYC7FsxPLPA/exec";
+<script>
+  const apiUrl = "https://script.google.com/macros/s/AKfycbzN_oVxULWKjN2I7WFBnw1rSyHyiX13GE5W2IEFh6zYqoRB8nmf-p6Npq0iYC7FsxPLPA/exec";
+
+  // تحميل أنواع الورق
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      const coverSelect = document.getElementById("coverPaper");
+      const innerSelect = document.getElementById("innerPaper");
+      coverSelect.innerHTML = "";
+      innerSelect.innerHTML = "";
+
+      const rows = data["haam"] || [];
+      rows.forEach(row => {
+        const value = row["نوع الورق"];
+        if (value && value.trim() !== "") {
+          const option1 = document.createElement("option");
+          option1.textContent = value;
+          coverSelect.appendChild(option1);
+
+          const option2 = document.createElement("option");
+          option2.textContent = value;
+          innerSelect.appendChild(option2);
+        }
+      });
+    });
+
+  // تحميل عدد الصفحات الداخلية
+  const innerPages = document.getElementById("innerPages");
+  for (let i = 4; i <= 500; i += 4) {
+    const option = document.createElement("option");
+    option.value = option.textContent = i;
+    innerPages.appendChild(option);
+  }
+
+  document.getElementById("pricingForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const size = document.getElementById("size").value;
+    const coverPaper = document.getElementById("coverPaper").value;
+    const innerPaper = document.getElementById("innerPaper").value;
+    const coverLam = document.getElementById("coverLam").value;
+    const innerLam = document.getElementById("innerLam").value;
+    const quantity = parseInt(document.getElementById("quantity").value);
+    const innerPagesCount = parseInt(document.getElementById("innerPages").value);
+    const result = document.getElementById("result");
+
+    const dividerMap = { A4: 2, A5: 4, A6: 8 };
+    const divider = dividerMap[size] || 1;
 
     fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
-        const coverSelect = document.getElementById("coverPaper");
-        const innerSelect = document.getElementById("innerPaper");
-        coverSelect.innerHTML = "";
-        innerSelect.innerHTML = "";
-
         const rows = data["haam"] || [];
-        rows.forEach(row => {
-          const value = row["نوع الورق"];
-          if (value && value.trim() !== "") {
-            const option1 = document.createElement("option");
-            option1.textContent = value;
-            coverSelect.appendChild(option1);
+        const lamData = data["haam%"] || [];
 
-            const option2 = document.createElement("option");
-            option2.textContent = value;
-            innerSelect.appendChild(option2);
+        const foundCoverRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
+        const foundInnerRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
+
+        const coverValue = parseFloat(foundCoverRow?.[size]) || 0;
+        const innerValue = parseFloat(foundInnerRow?.[size]) || 0;
+
+        // جلب سلوفان للغلاف
+        let laminationCoverValue = 0;
+        if (coverLam !== "بدون") {
+          const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+          if (lamRow) {
+            laminationCoverValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
           }
-        });
-      });
+        }
 
-    const innerPages = document.getElementById("innerPages");
-    for (let i = 4; i <= 500; i += 4) {
-      const option = document.createElement("option");
-      option.value = option.textContent = i;
-      innerPages.appendChild(option);
-    }
+        // جلب سلوفان للصفحات الداخلية
+        let laminationInnerValue = 0;
+        if (innerLam !== "بدون") {
+          const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+          if (lamRow) {
+            const baseValue = parseFloat(lamRow["سلوفان وجه واحد 33"]) / divider;
+            laminationInnerValue = baseValue * innerPagesCount;
+          }
+        }
 
-document.getElementById("pricingForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const size = document.getElementById("size").value;
-  const coverPaper = document.getElementById("coverPaper").value;
-  const innerPaper = document.getElementById("innerPaper").value;
-  const result = document.getElementById("result");
-
-  fetch(apiUrl)
-    .then(res => res.json())
-.then(data => {
-  const rows = data["haam"] || [];
-  const foundCoverRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
-  const foundInnerRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
-
-  const coverValue = foundCoverRow?.[size];
-  const innerValue = foundInnerRow?.[size];
-
-if (!isNaN(coverValue) && !isNaN(innerValue)) {
-  const lamTypeCover = document.getElementById("coverLam").value;
-  const lamTypeInner = document.getElementById("innerLam").value;
-  const quantity = parseInt(document.getElementById("quantity").value);
-  const pages = parseInt(document.getElementById("innerPages").value);
-  const size = document.getElementById("size").value;
-
-  let laminationCoverValue = 0;
-  let laminationInnerValue = 0;
-
-  const dividerMap = { A4: 2, A5: 4, A6: 8 };
-  const divider = dividerMap[size] || 1;
-
-  const lamData = data["haam%"] || [];
-
-  // سلوفان الغلاف
-  if (lamTypeCover !== "بدون") {
-    const lamRowCover = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
-    if (lamRowCover) {
-      laminationCoverValue = parseFloat(lamRowCover["سلوفان وجه واحد 33"]) / divider;
-    }
-  }
-
-  // سلوفان الصفحات الداخلية
-  if (lamTypeInner !== "بدون") {
-    const lamRowInner = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
-    if (lamRowInner) {
-      const baseValue = parseFloat(lamRowInner["سلوفان وجه واحد 33"]) / divider;
-      laminationInnerValue = baseValue * pages;
-    }
-  }
-
-  result.textContent = `✅ تم جلب القيم بنجاح:
+        result.textContent = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
-🔹 سلوفان الغلاف (بعد القسمة): ${laminationCoverValue.toFixed(3)}
-🔹 سلوفان الصفحات الداخلية (× الصفحات): ${laminationInnerValue.toFixed(3)}`;
-}
-else {
-  result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
-}
-})
-    .catch(err => {
-      result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
-      console.error(err);
-    });
-});
-  </script>
+🔹 سلوفان الغلاف (مقسوم حسب المقاس): ${laminationCoverValue.toFixed(3)}
+🔹 سلوفان الداخلي (بعد الضرب × الصفحات): ${laminationInnerValue.toFixed(3)}`;
+      })
+      .catch(err => {
+        result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
+        console.error(err);
+      });
+  });
+</script>
 </body>
 </html>
