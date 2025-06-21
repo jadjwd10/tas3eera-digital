@@ -181,23 +181,37 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
 
   fetch(apiUrl)
     .then(res => res.json())
-    .then(data => {
-      const rows = data["haam"] || [];
+.then(data => {
+  const rows = data["haam"] || [];
+  const foundCoverRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
+  const foundInnerRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
 
-      const foundCoverRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
-      const foundInnerRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
+  const coverValue = foundCoverRow?.[size];
+  const innerValue = foundInnerRow?.[size];
 
-      if (
-        foundCoverRow && foundInnerRow &&
-        foundCoverRow[size] !== undefined && foundCoverRow[size] !== "" && !isNaN(foundCoverRow[size]) &&
-        foundInnerRow[size] !== undefined && foundInnerRow[size] !== "" && !isNaN(foundInnerRow[size])
-      ) {
-        result.textContent = 
-          `📘 الغلاف: ${foundCoverRow[size]} ريال\n📄 الداخلي: ${foundInnerRow[size]} ريال`;
-      } else {
-        result.textContent = "❌ لم يتم العثور على السعر المناسب لنوع الورق الخارجي أو الداخلي.";
+  if (!isNaN(coverValue) && !isNaN(innerValue)) {
+    // جلب سلوفان الغلاف إذا تم اختياره
+    const lamType = document.getElementById("coverLam").value;
+    const quantity = parseInt(document.getElementById("quantity").value);
+    let laminationValue = 0;
+
+    if (lamType !== "بدون") {
+      const lamData = data["haam%"] || [];
+      const lamRow = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+      if (lamRow) {
+        laminationValue = parseFloat(lamRow["سلوفان وجه واحد 33"]);
       }
-    })
+    }
+
+    // الآن تقدر تستخدم coverValue و innerValue و laminationValue في العمليات
+    result.textContent = "✅ تم جلب القيم بنجاح.";
+    console.log("قيمة الغلاف:", coverValue);
+    console.log("قيمة الداخلي:", innerValue);
+    console.log("سلوفان الغلاف:", laminationValue);
+  } else {
+    result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
+  }
+});
     .catch(err => {
       result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
       console.error(err);
