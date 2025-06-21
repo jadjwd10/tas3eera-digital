@@ -153,13 +153,14 @@
         const rows = data["haam"];
 
         for (let i = 1; i < rows.length; i++) {
-          if (rows[i][0] && rows[i][1] == 1) {
-            const option = document.createElement("option");
-            option.textContent = rows[i][0];
-            coverSelect.appendChild(option);
+          const value = rows[i][2];
+          if (value) {
+            const option1 = document.createElement("option");
+            option1.textContent = value;
+            coverSelect.appendChild(option1);
 
             const option2 = document.createElement("option");
-            option2.textContent = rows[i][0];
+            option2.textContent = value;
             innerSelect.appendChild(option2);
           }
         }
