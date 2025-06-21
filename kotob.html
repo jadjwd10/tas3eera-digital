@@ -190,43 +190,44 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
   const innerValue = foundInnerRow?.[size];
 
 if (!isNaN(coverValue) && !isNaN(innerValue)) {
-  const lamType = document.getElementById("coverLam").value;
-  let laminationValue = 0;
+  const lamTypeCover = document.getElementById("coverLam").value;
+  const lamTypeInner = document.getElementById("innerLam").value;
+  const quantity = parseInt(document.getElementById("quantity").value);
+  const pages = parseInt(document.getElementById("innerPages").value);
+  const size = document.getElementById("size").value;
 
-  if (lamType !== "بدون") {
-    const lamData = data["haam%"] || [];
-    const firstRow = lamData[0];
-    if (firstRow && !isNaN(parseFloat(firstRow["سلوفان وجه واحد 33"]))) {
-      laminationValue = parseFloat(firstRow["سلوفان وجه واحد 33"]);
+  let laminationCoverValue = 0;
+  let laminationInnerValue = 0;
+
+  const dividerMap = { A4: 2, A5: 4, A6: 8 };
+  const divider = dividerMap[size] || 1;
+
+  const lamData = data["haam%"] || [];
+
+  // سلوفان الغلاف
+  if (lamTypeCover !== "بدون") {
+    const lamRowCover = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+    if (lamRowCover) {
+      laminationCoverValue = parseFloat(lamRowCover["سلوفان وجه واحد 33"]) / divider;
     }
   }
 
-  const innerLamType = document.getElementById("innerLam").value;
-  let innerLaminationValue = 0;
-
-  if (innerLamType !== "بدون") {
-    const lamData = data["haam%"] || [];
-    const firstRow = lamData[0];
-    if (firstRow && !isNaN(parseFloat(firstRow["سلوفان وجه واحد 33"]))) {
-      innerLaminationValue = parseFloat(firstRow["سلوفان وجه واحد 33"]);
+  // سلوفان الصفحات الداخلية
+  if (lamTypeInner !== "بدون") {
+    const lamRowInner = lamData.find(r => r["الناتج"] == quantity && !isNaN(r["سلوفان وجه واحد 33"]));
+    if (lamRowInner) {
+      const baseValue = parseFloat(lamRowInner["سلوفان وجه واحد 33"]) / divider;
+      laminationInnerValue = baseValue * pages;
     }
   }
-
-  // التقسيم حسب المقاس
-  let divisionFactor = 1;
-  if (size === "A4") divisionFactor = 2;
-  else if (size === "A5") divisionFactor = 4;
-  else if (size === "A6") divisionFactor = 8;
-
-  const finalLaminationCover = laminationValue / divisionFactor;
-  const finalLaminationInner = innerLaminationValue / divisionFactor;
 
   result.textContent = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
-🔹 سلوفان الغلاف (مقسوم حسب المقاس): ${finalLaminationCover.toFixed(3)}
-🔹 سلوفان الداخلي (مقسوم حسب المقاس): ${finalLaminationInner.toFixed(3)}`;
-} else {
+🔹 سلوفان الغلاف (بعد القسمة): ${laminationCoverValue.toFixed(3)}
+🔹 سلوفان الصفحات الداخلية (× الصفحات): ${laminationInnerValue.toFixed(3)}`;
+}
+else {
   result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
 }
 })
