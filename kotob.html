@@ -177,23 +177,32 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
 
   const size = document.getElementById("size").value;
   const coverPaper = document.getElementById("coverPaper").value;
+  const innerPaper = document.getElementById("innerPaper").value;
+  const result = document.getElementById("result");
 
- fetch(apiUrl)
-  .then(res => res.json())
-  .then(data => {
-    const rows = data["haam"] || [];
-    const foundRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      const rows = data["haam"] || [];
 
-    if (foundRow && foundRow[size] !== undefined && foundRow[size] !== "" && !isNaN(foundRow[size])) {
-      result.textContent = `نوع الورق الخارجي (الغلاف): ${foundRow[size]} ريال`;
-    } else {
-      result.textContent = "❌ لم يتم العثور على السعر المناسب لهذا المقاس أو نوع الورق.";
-    }
-  })
-  .catch(err => {
-    result.textContent = "❌ حدث خطأ أثناء الاتصال بقاعدة البيانات.";
-    console.error(err);
-  });
+      const foundCoverRow = rows.find(row => row["نوع الورق"]?.trim() === coverPaper.trim());
+      const foundInnerRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
+
+      if (
+        foundCoverRow && foundInnerRow &&
+        foundCoverRow[size] !== undefined && foundCoverRow[size] !== "" && !isNaN(foundCoverRow[size]) &&
+        foundInnerRow[size] !== undefined && foundInnerRow[size] !== "" && !isNaN(foundInnerRow[size])
+      ) {
+        result.textContent = 
+          `📘 الغلاف: ${foundCoverRow[size]} ريال\n📄 الداخلي: ${foundInnerRow[size]} ريال`;
+      } else {
+        result.textContent = "❌ لم يتم العثور على السعر المناسب لنوع الورق الخارجي أو الداخلي.";
+      }
+    })
+    .catch(err => {
+      result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
+      console.error(err);
+    });
 });
   </script>
 </body>
