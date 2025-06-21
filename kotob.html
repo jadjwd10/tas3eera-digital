@@ -135,7 +135,11 @@
     <input type="number" id="quantity" min="1">
 
     <button type="submit">احسب التسعيرة</button>
-    <div class="result" id="result"></div>
+   <div class="result" id="result">
+  <div id="resultMain"></div>
+  <div id="resultExtra"></div>
+</div>
+
   </form>
 
 <script>
@@ -219,7 +223,7 @@ const result = document.getElementById("result");
           const finalLaminationCover = laminationValue / divisionFactor;
           const finalLaminationInner = innerLaminationValue / divisionFactor;
 
-          result.innerHTML = `✅ تم جلب القيم بنجاح:
+document.getElementById("resultMain").innerHTML = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
 🔹 عدد الصفحات الداخلية: ${innerPagesCount}
@@ -243,10 +247,10 @@ const result = document.getElementById("result");
 <script>
   document.getElementById("pricingForm").addEventListener("submit", function () {
     setTimeout(() => {
-      const resultDiv = document.getElementById("result");
-      const resultText = resultDiv.innerHTML; // استخدم innerHTML بدال textContent
+      const resultMain = document.getElementById("resultMain");
+      const resultExtra = document.getElementById("resultExtra");
+      const resultText = resultMain.innerHTML;
 
-      // استخراج القيم
       const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
       const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
 
@@ -255,12 +259,9 @@ const result = document.getElementById("result");
         const lamValue = parseFloat(lamInnerMatch[1]);
         const total = (pages * lamValue).toFixed(3);
 
-        // تحقق إذا السطر مضاف من قبل
-        if (!resultText.includes("تكلفة سلوفان الصفحات الداخلية:")) {
-          resultDiv.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
-        }
+        resultExtra.innerHTML = `🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
       }
-    }, 250); // نزيد الوقت قليلًا احتياط
+    }, 300);
   });
 </script>
 
