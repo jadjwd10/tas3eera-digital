@@ -223,6 +223,7 @@ const result = document.getElementById("result");
           const finalLaminationCover = laminationValue / divisionFactor;
           const finalLaminationInner = innerLaminationValue / divisionFactor;
 
+// عرض النتائج الرئيسية
 document.getElementById("resultMain").innerHTML = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
@@ -231,6 +232,11 @@ document.getElementById("resultMain").innerHTML = `✅ تم جلب القيم ب
 🔹 الكمية: ${quantity}
 🔹 سلوفان الغلاف: ${finalLaminationCover.toFixed(3)}
 🔹 سلوفان الداخلي: ${finalLaminationInner.toFixed(3)}`;
+
+// ✅ حساب تكلفة سلوفان الصفحات الداخلية مباشرة
+const totalInnerLamination = (innerPagesCount * finalLaminationInner).toFixed(3);
+document.getElementById("resultExtra").innerHTML =
+  `🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${totalInnerLamination}`;
 
         } else {
           result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
@@ -244,26 +250,6 @@ document.getElementById("resultMain").innerHTML = `✅ تم جلب القيم ب
 </script>
 
   
-<script>
-  document.getElementById("pricingForm").addEventListener("submit", function () {
-    setTimeout(() => {
-      const resultMain = document.getElementById("resultMain");
-      const resultExtra = document.getElementById("resultExtra");
-      const resultText = resultMain.innerHTML;
-
-      const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
-      const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
-
-      if (innerPagesMatch && lamInnerMatch) {
-        const pages = parseInt(innerPagesMatch[1]);
-        const lamValue = parseFloat(lamInnerMatch[1]);
-        const total = (pages * lamValue).toFixed(3);
-
-        resultExtra.innerHTML = `🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}`;
-      }
-    }, 300);
-  });
-</script>
 
 </body>
 </html>
