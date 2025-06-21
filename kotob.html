@@ -250,38 +250,61 @@ document.getElementById("resultExtra").innerHTML = `
   });
 </script>
 
-  <script>
+<script>
 document.getElementById("pricingForm").addEventListener("submit", function () {
   setTimeout(() => {
-    const resultMain = document.getElementById("result").textContent;
-    if (!resultMain.includes("✅ تم جلب القيم بنجاح:")) return;
-
-    const size = document.getElementById("size").value;
-    const innerPaper = document.getElementById("innerPaper").value;
-    const innerPagesCount = parseInt(document.getElementById("innerPages").value);
+    const resultMain = document.getElementById("resultMain");
     const resultExtra = document.getElementById("resultExtra");
+    const resultText = resultMain.textContent;
+
+    if (!resultText.includes("تم جلب القيم")) return;
+
+    const innerPagesMatch = resultText.match(/عدد الصفحات الداخلية:\s*(\d+)/);
+    const lamInnerMatch = resultText.match(/سلوفان الداخلي:\s*([\d.]+)/);
+    const lamCoverMatch = resultText.match(/سلوفان الغلاف:\s*([\d.]+)/);
+
+    const innerPaper = document.getElementById("innerPaper").value;
+    const size = document.getElementById("size").value;
+
+    let lamInnerText = "", lamCoverText = "", pageCostText = "";
+
+    if (innerPagesMatch && lamInnerMatch) {
+      const pages = parseInt(innerPagesMatch[1]);
+      const lamValue = parseFloat(lamInnerMatch[1]);
+      const total = (pages * lamValue).toFixed(3);
+      lamInnerText = `🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${total}<br>`;
+    }
+
+    if (lamCoverMatch) {
+      const lamValue = parseFloat(lamCoverMatch[1]);
+      lamCoverText = `🔹 <span style="color:#1e88e5">تكلفة سلوفان الغلاف:</span> ${lamValue.toFixed(3)}<br>`;
+    }
 
     fetch("https://script.google.com/macros/s/AKfycbzN_oVxULWKjN2I7WFBnw1rSyHyiX13GE5W2IEFh6zYqoRB8nmf-p6Npq0iYC7FsxPLPA/exec")
       .then(res => res.json())
       .then(data => {
         const rows = data["haam"] || [];
-        const paperRow = rows.find(row => row["نوع الورق"]?.trim() === innerPaper.trim());
+        const row = rows.find(r => r["نوع الورق"]?.trim() === innerPaper.trim());
 
-        if (paperRow) {
-          const السعر = parseFloat(paperRow["السعر"]) || 0;
-          const عددالرزم = parseFloat(paperRow["عدد الورق لكل رزمة"]) || 1;
-          const قيمةالداخلي = parseFloat(paperRow[size]) || 1;
+        if (row) {
+          const السعر = parseFloat(row["السعر"]);
+          const الرزم = parseFloat(row["عدد الورق لكل رزمة"]);
+          const قيمةداخلي = parseFloat(row[size]);
+          const صفحات = parseInt(innerPagesMatch?.[1] || "0");
 
-          const السعر_للورقة = السعر / عددالرزم / قيمةالداخلي;
-          const نصف_عدد_الصفحات = innerPagesCount / 2;
-          const التكلفة_النهائية = (السعر_للورقة * نصف_عدد_الصفحات).toFixed(3);
-
-          resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة عدد الصفحات الداخلية:</span> ${التكلفة_النهائية}`;
+          if (!isNaN(السعر) && !isNaN(الرزم) && !isNaN(قيمةداخلي) && !isNaN(صفحات)) {
+            const سعرالورقة = السعر / الرزم / قيمةداخلي;
+            const التكلفة = (سعرالورقة * (صفحات / 2)).toFixed(3);
+            pageCostText = `🔹 <span style="color:#1e88e5">تكلفة عدد الصفحات الداخلية:</span> ${التكلفة}`;
+          }
         }
+
+        resultExtra.innerHTML = lamInnerText + lamCoverText + pageCostText;
       });
-  }, 500); // ننتظر نصف ثانية فقط للتأكد من ظهور النتائج
+  }, 500);
 });
 </script>
+
 
 
 </body>
