@@ -189,28 +189,38 @@ document.getElementById("pricingForm").addEventListener("submit", function(e) {
   const coverValue = foundCoverRow?.[size];
   const innerValue = foundInnerRow?.[size];
 
-  if (!isNaN(coverValue) && !isNaN(innerValue)) {
-    // جلب سلوفان الغلاف إذا تم اختياره
-    const lamType = document.getElementById("coverLam").value;
-    const quantity = parseInt(document.getElementById("quantity").value);
-    let laminationValue = 0;
+if (!isNaN(coverValue) && !isNaN(innerValue)) {
+  const lamType = document.getElementById("coverLam").value;
+  let laminationValue = 0;
 
-if (lamType !== "بدون") {
-  const lamData = data["haam%"] || [];
-  const firstRow = lamData[0]; // أول صف فقط
-  if (firstRow && !isNaN(parseFloat(firstRow["سلوفان وجه واحد 33"]))) {
-    laminationValue = parseFloat(firstRow["سلوفان وجه واحد 33"]);
+  if (lamType !== "بدون") {
+    const lamData = data["haam%"] || [];
+    const firstRow = lamData[0];
+    if (firstRow && !isNaN(parseFloat(firstRow["سلوفان وجه واحد 33"]))) {
+      laminationValue = parseFloat(firstRow["سلوفان وجه واحد 33"]);
+    }
   }
-}
 
-    // الآن تقدر تستخدم coverValue و innerValue و laminationValue في العمليات
-result.textContent = `✅ تم جلب القيم بنجاح:
+  const innerLamType = document.getElementById("innerLam").value;
+  let innerLaminationValue = 0;
+
+  if (innerLamType !== "بدون") {
+    const lamData = data["haam%"] || [];
+    const firstRow = lamData[0];
+    if (firstRow && !isNaN(parseFloat(firstRow["سلوفان وجه واحد 33"]))) {
+      innerLaminationValue = parseFloat(firstRow["سلوفان وجه واحد 33"]);
+    }
+  }
+
+  result.textContent = `✅ تم جلب القيم بنجاح:
 🔹 قيمة الغلاف: ${coverValue}
 🔹 قيمة الداخلي: ${innerValue}
-🔹 سلوفان الغلاف: ${laminationValue}`;
-  } else {
-    result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
-  }
+🔹 سلوفان الغلاف: ${laminationValue}
+🔹 سلوفان الداخلي: ${innerLaminationValue}`;
+} else {
+  result.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
+}
+
 })
     .catch(err => {
       result.textContent = "❌ حدث خطأ أثناء حساب التسعيرة";
