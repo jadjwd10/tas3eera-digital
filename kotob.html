@@ -267,7 +267,22 @@ if (!isNaN(السعر_غلاف) && !isNaN(الرزم_غلاف) && !isNaN(قيم�
   const تكلفة_الغلاف = (سعر_الورقة_غلاف * 2).toFixed(3);
   resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة عدد صفحات الغلاف:</span> ${تكلفة_الغلاف}`;
 }
- 
+ // ✅ سعر الطباعة:
+const totalPages = innerPagesCount + coverPagesCount;
+let printingFactor = 1; // A4 by default
+
+if (size === "A5") printingFactor = 0.5;
+else if (size === "A6") printingFactor = 0.25;
+else if (size === "A7") printingFactor = 0.125;
+
+const سعر_الطباعة = parseFloat(foundInnerRow["سعر الطباعة "]) || 0; // تأكد أن فيه مسافة بعد الكلمة
+
+if (!isNaN(سعر_الطباعة)) {
+  const تكلفة_الطباعة = (totalPages * (سعر_الطباعة * printingFactor)).toFixed(3);
+  resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سعر الطباعة:</span> ${تكلفة_الطباعة}`;
+} else {
+  resultExtra.innerHTML += `<br>🔸 <span style="color:#f39c12">لم يتم العثور على سعر الطباعة</span>`;
+}
         } else {
           resultMain.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
         }
