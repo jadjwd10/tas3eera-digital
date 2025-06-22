@@ -292,13 +292,13 @@ if (!isNaN(سعر_الطباعة)) {
   resultExtra.innerHTML += `<br>🔸 <span style="color:#f39c12">لم يتم العثور على سعر الطباعة</span>`;
 }
 // ✅ حساب التكلفة الإجمالية
-const sumTotal = 
+const sumTotal = (
   parseFloat(totalInnerLamination) +
   parseFloat(finalLaminationCover.toFixed(3)) +
   parseFloat(التكلفة) +
   parseFloat(تكلفة_الغلاف) +
-  parseFloat(تكلفة_الطباعة);
-
+  parseFloat(تكلفة_الطباعة)
+).toFixed(3);
 resultExtra.innerHTML += `<br><br>💰 <span style="color:#43a047;font-weight:bold">📦 التكلفة الإجمالية:</span> ${sumTotal.toFixed(3)} ريال`;
 
           
