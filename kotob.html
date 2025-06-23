@@ -241,8 +241,8 @@
 🔹 سلوفان الداخلي: ${finalLaminationInner.toFixed(3)}`;
 
           // ✅ العمليات الإضافية:
-          const totalInnerLamination = (innerPagesCount * finalLaminationInner).toFixed(3);
-          resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${totalInnerLamination}`;
+          const totalInnerLamination = innerPagesCount * finalLaminationInner;
+resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الصفحات الداخلية:</span> ${totalInnerLamination.toFixed(3)}`;
 
           resultExtra.innerHTML += `<br>🔹 <span style="color:#1e88e5">تكلفة سلوفان الغلاف:</span> ${finalLaminationCover.toFixed(3)}`;
 
@@ -296,15 +296,17 @@ const تكلفة_الغلاف = parseFloat(finalLaminationCover) || 0;
 const تكلفة_الصفحات = parseFloat(التكلفة_الداخلية) || 0;
 const الطباعة = parseFloat(تكلفة_الطباعة) || 0;
 
-const sumTotal = (
+const sum_cost = (
   تكلفة_الداخلي +
   تكلفة_الغلاف +
   تكلفة_الصفحات +
   الطباعة
-).toFixed(3);
+);
+
+const sumTotal = sum_cost.toFixed(3);
 
 resultExtra.innerHTML += `<br><br>💰 <span style="color:#43a047;font-weight:bold">📦 التكلفة الإجمالية:</span> ${sumTotal} ريال`;
-          
+    
         } else {
           resultMain.textContent = "❌ لم يتم العثور على قيمة رقمية صالحة.";
         }
